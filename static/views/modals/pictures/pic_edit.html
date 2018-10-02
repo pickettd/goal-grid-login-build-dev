@@ -1,0 +1,75 @@
+<div class="modal-header">
+    <button type="button"
+            class="close"
+            ng-click="pictureModal.resetPictureModal();$close()">
+        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+    <span>
+        <h4 class="modal-title" id="managePictureLabel">
+            <span ng-if="!main.pictureForModal.id">Add</span>
+            <span ng-if="main.pictureForModal.id">Edit</span>
+            Picture
+        </h4>
+    </span>
+</div>
+<div class="modal-body">
+    <span ng-if="main.pictureForModal.id">
+        <button type="button"
+                class="btn-danger glyphicon glyphicon-trash"
+                ng-click="pictureModal.deleteModalPicture()">
+            <span class="sr-only">Delete</span>
+        </button>
+        <strong>Delete</strong> this picture
+        <br>
+    </span>
+    <img ng-hide="!main.pictureForModal.id && pictureModal.selectExisting"
+         ng-src="{{ main.pictureForModal.src }}" class="img-responsive vert">
+    <br>
+    <label ng-if="!main.pictureForModal.id && !pictureModal.modalData.currentView.allowPictureEdit">
+        <input type="checkbox" ng-model="pictureModal.selectExisting">
+        Select From Existing Images
+    </label>
+    <div ng-if="!pictureModal.selectExisting">
+        <label>
+            <input type="radio" ng-model="main.pictureForModal.selectionType" value="file">
+            File
+        </label>
+        <label>
+            <input type="radio" ng-model="main.pictureForModal.selectionType" value="url">
+            Url
+        </label>
+    </div>
+    <br>
+    <form ng-if="!pictureModal.selectExisting"
+          name="pictureEditForm"
+          class="form-inline"
+          role="form"
+          novalidate
+          ng-submit="pictureEditForm.$valid && pictureModal.updateModalPicture()">
+        <div class="form-group" ng-class="{'has-error': pictureEditForm.picURL.$invalid}">
+            <div ng-if="main.pictureForModal.selectionType == 'url'">
+                <label for="picURL" class="control-label">Url</label>
+                <input type="text" class="form-control" size="50" ng-model="main.pictureForModal.src" name="picURL" placeholder="Required" required>
+            </div>
+            <div ng-if="main.pictureForModal.selectionType == 'file'">
+                <button ngf-select="pictureModal.convertFileToDataURL($file)"
+                        accept="image/*"
+                        ngf-resize-if="$width > 300"
+                        ngf-resize="{width: 300, height: 1000}">
+                    Select Picture
+                </button>
+                <br>
+                <label class="control-label">Selected file:</label>
+                <span ng-bind="main.pictureForModal.filename"></span>
+            </div>
+            <br>
+        </div>
+        <div class="pull-right">
+            <input type="submit" value="Save" class="btn btn-success" />
+        </div>
+    </form>
+    <div ng-if="pictureModal.selectExisting"
+         ng-include="'static/views/modals/pictures/just_select_form.html'"></div>
+</div>
+<div class="modal-footer">
+</div>

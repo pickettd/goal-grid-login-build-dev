@@ -1,0 +1,72 @@
+<div class="multi-sortable">
+    <div class="row">
+        <!-- <div class="visible-md visible-lg col-md-2"
+             sv-root="pictures-root"
+             sv-on-sort="main.changeOrderOfPicturesInCurrentView()">
+            <div ng-include="'static/views/builtin_goal_views/images_in_grid/left_first_image_column.html'"></div>
+        </div> -->
+    <!-- removed col-md-2 class to below to remove pictures -->
+        <div class="col-xs-3"
+             style="padding: 0px"
+             ng-repeat="goalTypeID in main.currentView.goalTypeIDs"
+             sv-root
+             sv-on-sort="main.changeOrderOfGoalsInCurrentView($item, $indexFrom, $indexTo)">
+            <div class="well grid-view-goal-box grid-view-type-header clickable-element"
+                ng-click="main.openGoalModal(goalTypeID);$event.stopPropagation()">
+                <h4 ng-bind="main.allGoalTypes[goalTypeID].name"></h4>
+            </div>
+
+            <div class="sortable-container"
+                 sv-part="main.currentView.goalArraysByType[goalTypeID]"
+                 style="width: 100%;">
+                <!-- This div renders the sortable directive when drag/drop goals is enabled -->
+                <div ng-if="main.gridViewRearrangeGoals && main.isGoalActiveInCurrentView(goal)"
+                     class="well sortable-single-goal grid-view-goal-box draggable-element"
+                     ng-repeat="goal in main.currentView.goalArraysByType[goalTypeID] track by goal.id"
+                     ng-style="main.getBackgroundColorStyleFromGoal(goal)"
+                     sv-element>
+                    <div class="sortable-single-goal-text"
+                          ng-bind="goal.goalText"></div>
+                    <div ng-if="main.allGoalTypes[goalTypeID].displayPercentage"
+                         class="sortable-single-goal-completed">
+                        <span><span ng-bind="main.getCurrentCompletionPercentageForGoal(goal)"></span>%</span>
+                    </div>
+                    <div ng-if="!main.allGoalTypes[goalTypeID].displayPercentage && main.isGoalCurrentlyComplete(goal)"
+                         class="sortable-single-goal-completed">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <!-- This div renders a click to add/edit UI when drag/drop goals is disabled -->
+                <div ng-if="!main.gridViewRearrangeGoals && main.isGoalActiveInCurrentView(goal)"
+                     class="well sortable-single-goal grid-view-goal-box clickable-element"
+                     ng-repeat="goal in main.currentView.goalArraysByType[goalTypeID] track by goal.id"
+                     ng-style="main.getBackgroundColorStyleFromGoal(goal)"
+                     ng-click="main.gridViewClickGoal(goal.id);$event.stopPropagation()">
+                    <div class="sortable-single-goal-text"
+                          ng-bind="goal.goalText"></div>
+                    <div ng-if="main.allGoalTypes[goalTypeID].displayPercentage"
+                         class="sortable-single-goal-completed">
+                        <span><span ng-bind="main.getCurrentCompletionPercentageForGoal(goal)"></span>%</span>
+                    </div>
+                    <div ng-if="!main.allGoalTypes[goalTypeID].displayPercentage && main.isGoalCurrentlyComplete(goal)"
+                         class="sortable-single-goal-completed">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="well sortable-single-goal grid-view-goal-box clickable-element"
+                     ng-click="main.gridViewClickEmptySpace($event, goalTypeID)">
+                    <div class="sortable-single-goal-text"
+                         style="color: #428bca; font-weight: bold;">
+                        <span>Add {{main.allGoalTypes[goalTypeID].name == "Activities" ? 'Activity' : main.allGoalTypes[goalTypeID].name + ' Goal'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="visible-md visible-lg col-md-2"
+             sv-root="pictures-root"
+             sv-on-sort="main.changeOrderOfPicturesInCurrentView()">
+            <div ng-include="'static/views/builtin_goal_views/images_in_grid/right_first_image_column.html'"></div>
+        </div> -->
+    </div>
+</div>

@@ -1,0 +1,128 @@
+<div class="modal-body">
+    <div>
+        <strong>Add</strong> new group:<br><br>
+        <div>
+            <form name="groupForm" class="form-inline" role="form" novalidate ng-submit="groupForm.$valid && accountsModal.addGroup()">
+                <div class="form-group" ng-class="{'has-error': groupForm.name.$invalid}">
+                    <label for="name" class="control-label">Name</label>
+                    <input type="text" class="form-control" size="20" ng-model="accountsModal.newGroup.name" name="name" placeholder="Required" required>
+                </div>
+                <br>
+                <div class="form-group"
+                     ng-class="{'has-error': groupForm.members.$invalid}">
+                    <label for="members" class="control-label">Members</label>
+                    <div ng-dropdown-multiselect="" options="main.accounts"
+                         selected-model="accountsModal.newGroup.selectedMembersArray"
+                         extra-settings="accountsModal.accountDropdownSettings"
+                         translation-texts="accountsModal.dropdownTexts">
+                    </div>
+                </div>
+                <div class="form-group"
+                     ng-class="{'has-error': groupForm.managers.$invalid}">
+                    <label for="managers" class="control-label">Managers</label>
+                    <div ng-dropdown-multiselect="" options="accountsModal.justManagers"
+                         selected-model="accountsModal.newGroup.selectedManagersArray"
+                         extra-settings="accountsModal.accountDropdownSettings"
+                         translation-texts="accountsModal.dropdownTexts">
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <input type="submit" value="Save" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <div>
+        <strong>Edit</strong> existing groups:<br>
+        <div ng-repeat="group in main.allGroups | orderObjectBy:'name' track by group.id">
+            <!-- This will hide when this account is being edited -->
+            <div ng-if="!accountsModal.currentGroupEdit[group.id].group">
+                <h3>{{group.name}}</h3>
+                <br>
+                <span>
+                    Members: <span ng-bind="accountsModal.getGroupMemberCount(group.id)"></span>
+                    <!--<span ng-repeat="(accountID, value) in group.members">
+                        <span ng-bind="main.accounts[accountID].username"></span><span ng-if="!($last)">, </span>
+                    </span>-->
+                </span>
+                <br>
+                <span>
+                    Managers: <span ng-bind="accountsModal.getGroupManagerCount(group.id)"></span>
+                    <!--<span ng-repeat="(accountID, value) in group.managers">
+                        <span ng-bind="main.accounts[accountID].username"></span><span ng-if="!($last)">, </span>
+                    </span>-->
+                </span>
+                <div class="pull-right">
+                    <button type="button"
+                            class="btn btn-primary"
+                            ng-click="accountsModal.editGroup(group)">Edit</button>
+                </div>
+            </div>
+            <!-- The will show when this group is being edited -->
+            <div ng-if="accountsModal.currentGroupEdit[group.id].group">
+                <span ng-hide="accountsModal.currentGroupEdit[group.id].deleteMode">
+                    <button type="button"
+                            class="btn-danger glyphicon glyphicon-trash"
+                            ng-click="accountsModal.toggleDeleteGroupMode(group.id)"></button>
+                    <strong>Edit</strong> '{{group.name}}' account:
+                </span>
+                <span ng-if="accountsModal.currentGroupEdit[group.id].deleteMode">
+                    <span style="color: red">This group will be permanently deleted. All users will be removed from this group.
+                        Are you sure you want to delete the '{{group.name}}' group?</span>
+                    <button type="button"
+                            class="btn-danger"
+                            ng-click="accountsModal.deleteGroup(group.id)">Yes</button>
+                    <button type="button"
+                            class="btn-default"
+                            ng-click="accountsModal.toggleDeleteGroupMode(group.id)">No</button>
+                </span>
+                <br><br>
+                <form name="groupEditForm"
+                      class="form-inline"
+                      role="form"
+                      novalidate
+                      ng-submit="groupEditForm.$valid && accountsModal.saveGroup(group)">
+                    <fieldset ng-disabled="accountsModal.currentGroupEdit[group.id].deleteMode">
+                        <div class="form-group" ng-class="{'has-error': accountEditForm.name.$invalid}">
+                            <label for="name" class="control-label">Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   size="20"
+                                   ng-model="accountsModal.currentGroupEdit[group.id].group.name"
+                                   name="name"
+                                   placeholder="Required"
+                                   required>
+                        </div>
+                        <br>
+                        <div ng-if="accountsModal.currentGroupEdit[group.id].group.selectedMembersArray"
+                             class="form-group"
+                             ng-class="{'has-error': groupForm.members.$invalid}">
+                            <label for="members" class="control-label">Members:</label>
+                            <div ng-dropdown-multiselect="" options="main.accounts"
+                                 selected-model="accountsModal.currentGroupEdit[group.id].group.selectedMembersArray"
+                                 extra-settings="accountsModal.accountDropdownSettings"
+                                 translation-texts="accountsModal.dropdownTexts">
+                            </div>
+                        </div>
+                        <div class="form-group"
+                             ng-class="{'has-error': groupForm.managers.$invalid}">
+                            <label for="managers" class="control-label">Managers:</label>
+                            <div ng-dropdown-multiselect="" options="accountsModal.justManagers"
+                                 selected-model="accountsModal.currentGroupEdit[group.id].group.selectedManagersArray"
+                                 extra-settings="accountsModal.accountDropdownSettings"
+                                 translation-texts="accountsModal.dropdownTexts">
+                            </div>
+                        </div>
+                        <div class="pull-right">
+                            <input type="submit" value="Save" class="btn btn-success" />
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <hr ng-if="!($last)">
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+</div>

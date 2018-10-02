@@ -1,0 +1,12 @@
+<div ng-init="(_monthDayArray = []).length = 33;">
+    <div ng-repeat="group in reports.allGroups | orderObjectBy:'name'"
+         class="row"
+         ng-class="{'well report-well': main.currentUser.isManager()}">
+        <div ng-include="'static/views/reporting/per_group_reports.html'"></div>
+    </div>
+    <div ng-init="group={id: 'everyone', name: 'Everyone'}"
+         class="row"
+         ng-class="{'well report-well': main.currentUser.isManager()}">
+        <div ng-include="'static/views/reporting/per_group_reports.html'"></div>
+    </div>
+</div>

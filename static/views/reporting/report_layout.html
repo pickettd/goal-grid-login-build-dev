@@ -1,0 +1,140 @@
+<div style="padding-top: 17px" ng-controller="ReportsCtrl">
+    <!-- Commenting out the options display because we only have one option right now -->
+    <!--
+    <div>
+        <span ng-if="!reports.toggleShowOptions && main.currentUser.isManager()" ng-click="reports.toggleShowOptions = !reports.toggleShowOptions">
+            <a href="">
+                <span class="glyphicon glyphicon-plus"></span> Show options
+            </a>
+        </span>
+        <span ng-if="reports.toggleShowOptions  && main.currentUser.isManager()" ng-click="reports.toggleShowOptions = !reports.toggleShowOptions">
+            <a href="">
+            <span class="glyphicon glyphicon-minus"></span> Hide options
+            </a>
+            <hr>
+        </span>
+    </div>
+    -->
+<!--
+    <div ng-show="reports.toggleShowOptions">
+        <div ng-if="main.currentUser.isManager()">
+            <span>Users: </span>
+            <div ng-dropdown-multiselect="" options="main.accounts"
+                 selected-model="reports.selectedReportsUserArray"
+                 extra-settings="reports.accountDropdownSettings"
+                 translation-texts="reports.accountDropdownTexts">
+            </div>
+            <hr>
+        </div>
+        <div>
+-->
+            <!-- TODO: We probably want detail view eventually but for now it is disabled -->
+            <!--
+            <ul class="goal-view-menu">
+                <li class="goal-view-menu-item">
+                    <button disabled ng-click="reports.toggleGoalReportDetails()" class="btn btn-default">
+                        <span ng-if="!reports.goalReportShowDetails">Show Details</span>
+                        <span ng-if="reports.goalReportShowDetails">Show Summary</span>
+                    </button>
+                </li>
+            </ul>
+            <hr>
+            -->
+<!--
+        </div>
+    </div>
+-->
+    <div>
+        <!-- This row is for the date control buttons and user dropdown control-->
+        <div class="row">
+            <div ng-if="main.currentUser.isManager()" class="col-xs-2 hide-on-print">
+                <!--<span>Users: </span> -->
+                <div ng-dropdown-multiselect="" options="main.accounts"
+                     selected-model="reports.selectedReportsUserArray"
+                     extra-settings="reports.accountDropdownSettings"
+                     translation-texts="reports.accountDropdownTexts">
+                </div>
+            </div>
+            <!-- This div is for the date shortcut controls -->
+            <div class="col-xs-8 text-center hide-on-print"
+                 ng-class="{'col-xs-offset-2': (!main.currentUser.isManager())}">
+                <a ng-if="main.currentUser.isManager() && !main.showRewards"
+                   href
+                   ng-click="main.showReportsCoaching = !main.showReportsCoaching">
+                    <span ng-if="!main.showReportsCoaching">Show Coaching Report</span>
+                    <span ng-if="main.showReportsCoaching">Return to Goal Reports</span>
+                </a>
+                <p ng-if="main.showRewards && !reports.showClaimReport" style="font-weight: bold;" class="text-center">
+                    {{ reports.currentReportToDate | date : 'MMMM-yyyy' }}
+                </p>
+                <ul class="goal-view-menu">
+                    <li class="goal-view-menu-item">
+                        <button ng-click="reports.setViewByMonthDiff(-1)" class="btn btn-default">
+                            <span>Backward</span>
+                        </button>
+                    </li>
+                    <li class="goal-view-menu-item">
+                        <button ng-if="!(main.showRewards && reports.showClaimReport)"
+                                ng-click="reports.setViewToCurrentMonth()"
+                                class="btn btn-default">
+                            <span>Current Month to Date</span>
+                        </button>
+                        <button ng-if="main.showRewards && reports.showClaimReport"
+                                ng-click="reports.setViewToLatestSixMonths()"
+                                class="btn btn-default">
+                            <span>Latest 6 months</span>
+                        </button>
+                    </li>
+                    <li class="goal-view-menu-item">
+                        <button ng-click="reports.setViewByMonthDiff(1)" class="btn btn-default">
+                            <span>Forward</span>
+                        </button>
+                    </li>
+                </ul>
+                <a ng-if="main.showRewards"
+                   href
+                   ng-click="reports.toggleShowClaimReport()">
+                    <span ng-if="reports.showClaimReport">Show Rewards list</span>
+                    <span ng-if="!reports.showClaimReport">Show Claim Report</span>
+                </a>
+            </div>
+            <!-- This row is for the date picker boxes-->
+            <div ng-if="(!main.showRewards) || (main.showRewards && reports.showClaimReport)" class="row">
+                    <div class="form-group col-xs-4 col-xs-offset-2 text-center">
+                        From:
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="reports.openReportsDatePickers($event, true)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                            <input disabled="true" type="text" size=9 class="form-control" show-button-bar="false" ng-change="reports.updateToFromAndMinMaxDates()"
+                                   datepicker-popup="{{'MMMM-yyyy'}}" is-open="reports.reportsFromDatePickerOpened"
+                                   ng-model="reports.currentReportFromDate" datepicker-options="reports.monthPickerOptions"
+                                   min-date="reports.currentReportMinFromDate" max-date="reports.currentReportToDate" datepicker-mode="'month'"  />
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-4 text-center">
+                        To:
+                        <div class="input-group">
+                        <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="reports.openReportsDatePickers($event, false)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                            <input disabled="true" type="text" size=9 class="form-control" show-button-bar="false" ng-change="reports.updateToFromAndMinMaxDates()"
+                                   datepicker-popup="{{'MMMM-yyyy'}}" is-open="reports.reportsToDatePickerOpened"
+                                   ng-model="reports.currentReportToDate" datepicker-options="reports.monthPickerOptions"
+                                   min-date="reports.currentReportFromDate" datepicker-mode="'month'" />
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <div ng-if="main.showReportsCoaching && main.currentUser.isManager()" ng-include="'static/views/reporting/coaching.html'">
+        </div>
+        <div ng-if="!main.showReportsCoaching || !main.currentUser.isManager()">
+            <div ng-if="!main.showRewards && main.showReports" ng-include="'static/views/reporting/reports_tables.html'"></div>
+            <div ng-if="main.showRewards && !reports.showClaimReport && !main.showReports"
+                 ng-include="'static/views/reporting/reports_rewards.html'"></div>
+            <div ng-if="main.showRewards && reports.showClaimReport && !main.showReports"
+                 ng-include="'static/views/reporting/reports_reward_claims.html'"></div>
+        </div>
+    </div>
+</div>

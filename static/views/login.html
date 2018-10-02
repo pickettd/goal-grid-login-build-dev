@@ -1,0 +1,49 @@
+<div id="container" class="bg">
+    <div id="firebaseui-auth-container"></div>
+    <div id="loader">Loading...</div>
+</div>
+<style>
+    .bg {
+        min-height: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    html,
+    body {
+        min-height: 100% !important;
+        height: 100%;
+    }
+</style>
+<script type="text/javascript">
+    var use_random_image = true;
+    if (use_random_image) {
+        var image_number = Math.floor(Math.random() * 7);
+    } else {
+        var d = new Date();
+        var image_number = d.getDay();
+    }
+
+    var weekday = new Array(7);
+    weekday[0] = "Sunday";
+    weekday[1] = "Monday";
+    weekday[2] = "Tuesday";
+    weekday[3] = "Wednesday";
+    weekday[4] = "Thursday";
+    weekday[5] = "Friday";
+    weekday[6] = "Saturday";
+
+    var use_image = weekday[image_number];
+
+    var bgimage = new Image();
+    var folder = "";
+    if (screen.width < 769) {
+        folder = "768/";
+    } else if (screen.width < 569) {
+        folder = "568/";
+    }
+
+    bgimage.src = "static/images/" + folder + use_image + ".jpg";
+    document.getElementById("container").style.backgroundImage = "url('" + bgimage.src + "')";
+</script>

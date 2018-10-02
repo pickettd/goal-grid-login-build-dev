@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="resetGoalsModal();$close()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title" id="manageGoalsLabel">
+        <span ng-if="!goalModal.modalState.editOnly">Add</span>
+        <span ng-if="!goalModal.modalState.editOnly && !goalModal.modalState.addOnly">/</span>
+        <span ng-if="!goalModal.modalState.addOnly">Edit</span>
+        <span> </span>
+        <span>
+            <span ng-if="!goalModal.modalState.addOnly">{{goalModal.modalGoalType.name == "Activities" ? 'Activity' : goalModal.modalGoalType.name + ' Goal'}}</span> <span ng-if="!goalModal.modalState.editOnly && !goalModal.modalState.addOnly"></span>
+        </span>
+    </h4>
+</div>
+<div class="modal-body">
+    <div ng-if="!goalModal.modalState.editOnly" ng-include="'static/views/modals/goals_new.html'"></div>
+    <hr ng-if="!goalModal.modalState.editOnly && !goalModal.modalState.addOnly">
+    <div ng-if="!goalModal.modalState.addOnly" ng-include="'static/views/modals/goals_edit.html'"></div>
+</div>
+<div class="modal-footer">
+</div>

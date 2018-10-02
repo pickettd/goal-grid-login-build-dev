@@ -1,0 +1,227 @@
+<div ng-if="goalModal.modalState.addOnly">
+    <span>
+        <span>Select goal type:</span>
+        <select
+          ng-options="option.name for (key, option) in goalModal.allGoalTypes track by option.id"
+          ng-model="goalModal.modalGoalType"></select>
+    </span>
+</div>
+<hr ng-if="goalModal.modalState.addOnly">
+<p class="text-center"><strong>Add</strong> new {{goalModal.modalGoalType.name == "Activities" ? 'activity' : goalModal.modalGoalType.name.toLowerCase() + ' goal'}}:</p>
+<div>
+    <form name="goalForm" class="form" role="form" novalidate ng-submit="goalForm.$valid && addGoal()">
+        <div class="form-inline">
+            <div class="form-group" ng-class="{'has-error': goalForm.goalText.$invalid}">
+                <input type="text"
+                       class="form-control"
+                       size="50"
+                       ng-model="newGoal.goalText"
+                       name="goalText"
+                       placeholder="{{goalModal.modalGoalType.name == 'Activities' ? 'Activity' : 'Goal'}} Text"
+                       required />
+            </div>
+        </div>
+        <br/>
+        <div class="form-inline">
+            <div class="form-group"
+                ng-class="{'has-error': goalForm.category.$invalid}">
+                <label for="goalCategorySelect"> Goal Category: </label>
+                <select
+                    class="form-control"
+                    ng-model="newGoal.category"
+                    ng-options="goalCategory as (goalCategory.category) for (id,goalCategory) in goalModal.categoryColors"
+                    name="category"
+                    required>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': goalForm.private.$invalid}" style="margin-bottom:0;">
+            <label style="margin-bottom:0;">Who can see this {{goalModal.modalGoalType.name == "Activities" ? 'activity' : 'goal'}}?</label>
+            <div class="form-inline">
+                <div class="radio" style="margin-top:0;">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.private"
+                               ng-value="false" />
+                        Shared with my manager
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.private"
+                               ng-value="true" />
+                        Just me (not shared with my manager)
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div ng-if="goalModal.modalGoalType.displayPercentage"
+             class="form-group"
+             ng-class="{'has-error': goalForm.checkboxCompletion.$invalid}"
+             style="margin-bottom:0;">
+            <label style="margin-bottom:0;">How do you want to track your progress for this {{goalModal.modalGoalType.name == "Activities" ? 'activity' : 'goal'}}?</label>
+            <div class="form-inline">
+                <div class="radio" style="margin-top:0;">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.checkboxCompletion"
+                               ng-value="false" /> Percentage buttons
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.checkboxCompletion"
+                               ng-value="true" /> Checkbox
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div ng-if="goalModal.modalGoalType.recurranceFormat !== 'DD-MMM-YYYY'"
+             class="form-group"
+             style="margin-bottom:0;">
+            <label style="margin-bottom:0;">Should this {{goalModal.modalGoalType.name == "Activities" ? 'activity' : 'goal'}} show up on the rewards page?</label>
+            <div class="form-inline">
+                <div class="radio" style="margin-top:0;">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.hideInRewards"
+                               ng-value="false" />
+                        Yes, I might want to attach rewards to this {{goalModal.modalGoalType.name == "Activities" ? 'activity' : 'goal'}}
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.hideInRewards"
+                               ng-value="true" />
+                        No, I won't attach rewards to this {{goalModal.modalGoalType.name == "Activities" ? 'activity' : 'goal'}}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div ng-if="goalModal.modalGoalType.recurranceFormat !== 'none' && goalModal.modalGoalType.name != 'Activities'"
+             class="form-group"
+             style="margin-bottom:0;">
+            <label style="margin-bottom:0;">
+                Does this goal repeat every {{goalModal.modalGoalType.name.replace("ly", "") | lowercase }}?
+            </label>
+            <div class="form-inline">
+                <div class="radio" style="margin-top:0;">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.singleGoalCompletion"
+                               ng-value="false" />
+                        Repeat every {{goalModal.modalGoalType.name.replace("ly", "") | lowercase }}
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.singleGoalCompletion"
+                               ng-value="true" />
+                        No, this is a one-time goal
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div ng-if="goalModal.modalGoalType.recurranceFormat !== 'none' && goalModal.modalGoalType.name == 'Activities'"
+             class="form-group"
+             style="margin-bottom:0;">
+            <label style="margin-bottom:0;">
+                Does this activity repeat?
+            </label>
+            <div class="form-inline">
+                <div class="radio" style="margin-top:0;">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.singleGoalCompletion"
+                               ng-value="false" />
+                        Yes
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.singleGoalCompletion"
+                               ng-value="true" />
+                        No
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div ng-if="goalModal.modalGoalType.recurranceFormat !== 'none' && goalModal.modalGoalType.name == 'Activities' && !newGoal.singleGoalCompletion"
+             class="form-group"
+             style="margin-bottom:0;">
+            <label style="margin-bottom:0;">
+                When should the activity repeat?
+            </label>
+            <div class="form-inline">
+                <div class="radio" style="margin-top:0;">
+                    <label>
+                        <input type="radio" ng-model="newGoal.recur.repeatType" ng-value="'days'"/>
+                        Daily
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" ng-model="newGoal.recur.repeatType" ng-value="'weeks'"/>
+                        Weekly
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div ng-if="goalModal.modalGoalType.recurranceFormat !== 'none' && goalModal.modalGoalType.name == 'Activities' && !newGoal.singleGoalCompletion" class="form-group" style="margin-bottom:0;">
+            <div class="form-inline">
+                <div ng-if="newGoal.recur.repeatType" style="margin-top:0;">
+                    Repeat every
+                    <label>
+                        <input type="number" size=1 ng-model="newGoal.recur.frequencyCount"/>
+                        {{newGoal.recur.repeatType === 'days' ? 'day' : 'week'}}(s)
+                    </label>
+                    <span ng-if="newGoal.recur.repeatType ===  'weeks' && newGoal.recur.frequencyCount == 1">on:</span>
+                </div>
+                <div ng-if="newGoal.recur.repeatType ===  'weeks' && newGoal.recur.frequencyCount == 1" class="checkbox">
+                    <label ng-repeat="day in days" style="padding-left: 5px">
+                        <input
+                          type="checkbox"
+                          name="selectedDays[]"
+                          value="{{day}}"
+                          ng-checked="selectedDays.indexOf(day) > -1"
+                          ng-click="toggleSelectedDays(day, selectedDays)">
+                          {{day}}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div ng-if="newGoal.singleGoalCompletion && goalModal.modalGoalType.recurranceFormat !== 'none'"
+             class="form-group"
+             style="margin-bottom:0;">
+            <label style="margin-bottom:0;">Should this one-time {{goalModal.modalGoalType.name == "Activities" ? 'activity' : 'goal'}} stay visible until you complete it?</label>
+            <div class="form-inline">
+                <div class="radio" style="margin-top:0;">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.autoHideIncompleteOneTimeGoals"
+                               ng-value="false" />
+                        Yes, keep it visible until I complete it
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio"
+                               ng-model="newGoal.autoHideIncompleteOneTimeGoals"
+                               ng-value="true" />
+                        No, hide it at the end of this {{goalModal.modalGoalType.name == "Activities" ? 'day' : goalModal.modalGoalType.name.replace("ly", "") | lowercase }}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" style="min-height:20px;">
+            <div class="pull-right">
+                <input id="saveNewGoalButton" type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </div>
+    </form>
+</div>

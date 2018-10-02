@@ -1,0 +1,131 @@
+<div class="multi-sortable">
+    <div class="row">
+        <!-- <div sv-root="pictures"
+             sv-on-sort="main.changeOrderOfPicturesInCurrentView()">
+            <div class="visible-md visible-lg col-md-3"
+                 ng-class="{'col-lg-2': main.currentView.showTwoPictureColumns}"
+                 style="padding-right: 0px;">
+                <div ng-include="'static/views/builtin_goal_views/images_in_grid/left_first_image_column.html'"></div>
+            </div>
+            <!-- Currently unused by any views
+            <div ng-if="main.currentView.showTwoPictureColumns"
+                 class="visible-lg col-lg-2"
+                 style="padding-left: 0px;">
+                <div class="sortable-container" sv-part="main.currentView.pictureIDs.left.second">
+                    <div ng-repeat="pictureID in main.currentView.pictureIDs.left.second" sv-element class="multi">
+                        <img draggable="false" ng-src="{{ main.allPictures[pictureID].src }}"
+                             style="width: 100%; display: block; margin: auto;" class="packery-image">
+                    </div>
+                    <button style="width: 100%; display: block; margin: auto;"
+                            class="packery-image"
+                            ng-click="main.setPictureAndOpenModal(null, true, false)">Add Here</button>
+                </div>
+            </div>
+            -->
+       <!-- </div> -->
+   <!-- removed col-md-6 class to remove images -->
+        <div class="col-xs-12" ng-class="{'col-lg-4': main.currentView.showTwoPictureColumns}">
+            <!-- Even though this is written as ng-repeat right now, it only supports one single goal type in the array -->
+            <div ng-repeat="goalTypeID in main.currentView.goalTypeIDs" style="text-align: center;">
+                <div class="well clickable-element grid-view-goal-box grid-view-type-header"
+                     ng-click="main.openGoalModal(goalTypeID)">
+                    <h4> {{main.allGoalTypes[goalTypeID].name == "Activities" ? 'Activities' : main.allGoalTypes[goalTypeID].name + ' Goals'}}</h4>
+                </div>
+                <div sv-root="nonCompleted"
+                     sv-on-sort="main.changeOrderOfGoalsInCurrentView($item, $indexFrom, $indexTo)">
+                    <div sv-part="main.currentView.goalArraysByType[goalTypeID]">
+                        <!-- This div renders the sortable directive when drag/drop goals is enabled -->
+                        <div ng-if="main.gridViewRearrangeGoals"
+                             sv-element="{containment:'.multi-sortable'}"
+                             ng-repeat="goal in main.currentView.goalArraysByType[goalTypeID] track by goal.id"
+                             class="draggable-element">
+                            <div ng-include="'static/views/builtin_goal_views/single_type_views/incomplete_goal.html'"></div>
+                        </div>
+                        <!-- This div renders a click to edit UI when drag/drop goals is disabled -->
+                        <!-- IMPORTANT! This block was edited to include class draggable-element and sv-element. This was to remove the necessity of checking the "Drag and Drop Goals/Images" checkbox. We can eliminate this in the above html block (and subsequent JS) after testing. -->
+                        <div ng-if="!main.gridViewRearrangeGoals"
+                             ng-repeat="goal in main.currentView.goalArraysByType[goalTypeID] track by goal.id"
+                             class="clickable-element"
+                             ng-click="main.gridViewClickGoal(goal.id);$event.stopPropagation()">
+                            <div ng-include="'static/views/builtin_goal_views/single_type_views/incomplete_goal.html'"></div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div sv-root="completed"
+                     sv-on-sort="main.changeOrderOfGoalsInCurrentView($item, $indexFrom, $indexTo)">
+                    <div sv-part="main.currentView.goalArraysByType[goalTypeID]">
+                        <!-- This div renders the sortable directive when drag/drop goals is enabled -->
+                        <div ng-if="main.gridViewRearrangeGoals"
+                             sv-element="{containment:'.multi-sortable'}"
+                             ng-repeat="goal in main.currentView.goalArraysByType[goalTypeID] track by goal.id"
+                             class="draggable-element">
+                            <div ng-include="'static/views/builtin_goal_views/single_type_views/complete_goal.html'"></div>
+                        </div>
+                        <!-- This div renders a click to edit UI when drag/drop goals is disabled -->
+                        <div ng-if="!main.gridViewRearrangeGoals"
+                             ng-repeat="goal in main.currentView.goalArraysByType[goalTypeID] track by goal.id"
+                             class="clickable-element"
+                             ng-click="main.gridViewClickGoal(goal.id);$event.stopPropagation()">
+                            <div ng-include="'static/views/builtin_goal_views/single_type_views/complete_goal.html'"></div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="well grid-view-goal-box">
+                    <div class="goal clickable-element"
+                         ng-click="main.gridViewClickEmptySpace($event, goalTypeID)">
+                        <div class="text-center"
+                             style="color: #428bca; font-weight: bold;">
+                            <span>Add {{main.allGoalTypes[goalTypeID].name == "Activities" ? 'Activity' : main.allGoalTypes[goalTypeID].name + ' Goal'}}</span>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="well grid-view-goal-box grid-view-note-box"
+                     ng-repeat="note in main.getVisibleNotesForCurrentUserByCurrentView() track by note.id">
+                    <div class="goal clickable-element"
+                         ng-click="main.addOrEditNoteModal(undefined, note.id)">
+                        <div class="text-center">
+                            <span ng-bind="note.noteText"></span>
+                            <span ng-if="note.private" class="glyphicon glyphicon-eye-close" title="Private note"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="well grid-view-goal-box">
+                    <div class="goal clickable-element"
+                         ng-click="main.addOrEditNoteModal()">
+                        <div class="text-center"
+                             style="color: #428bca; font-weight: bold;">
+                            <span>Add Note</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--<div sv-root="pictures"
+             sv-on-sort="main.changeOrderOfPicturesInCurrentView()">
+            <!-- Currently unused by any views
+            <div ng-if="main.currentView.showTwoPictureColumns"
+                 class="visible-lg col-lg-2"
+                 style="padding-right: 0px;">
+                <div class="sortable-container" sv-part="main.currentView.pictureIDs.right.second">
+                    <div ng-repeat="pictureID in main.currentView.pictureIDs.right.second" sv-element class="multi">
+                        <img draggable="false" ng-src="{{ main.allPictures[pictureID].src }}"
+                             style="width: 100%; display: block; margin: auto;" class="packery-image">
+                    </div>
+                    <button style="width: 100%; display: block; margin: auto;"
+                            class="packery-image"
+                            ng-click="main.setPictureAndOpenModal(null, false, false)">Add Here</button>
+                </div>
+            </div>
+            -->
+            <!--<div class="visible-md visible-lg col-md-3"
+                 ng-class="{'col-lg-2': main.currentView.showTwoPictureColumns}"
+                 style="padding-left: 0px;">
+                <div ng-include="'static/views/builtin_goal_views/images_in_grid/right_first_image_column.html'"></div>
+            </div>
+        </div> -->
+    </div>
+</div>

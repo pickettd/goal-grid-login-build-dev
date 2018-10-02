@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="noteModal.resetNoteModal();$close()">
+        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title">
+        <span ng-if="!noteModal.modalState.editOnly">Add</span>
+        <span ng-if="!noteModal.modalState.editOnly && !noteModal.modalState.addOnly">/</span>
+        <span ng-if="!noteModal.modalState.addOnly">Edit</span>
+        <span> </span>
+        <span>
+            Note<span ng-if="!noteModal.modalState.editOnly && !noteModal.modalState.addOnly">s</span>
+        </span>
+    </h4>
+</div>
+<div class="modal-body">
+    <div ng-if="!noteModal.modalState.editOnly" ng-include="'static/views/modals/notes/note_new.html'"></div>
+    <hr ng-if="!noteModal.modalState.editOnly && !noteModal.modalState.addOnly">
+    <div ng-if="!noteModal.modalState.addOnly" ng-include="'static/views/modals/notes/note_edit.html'"></div>
+</div>
+<div class="modal-footer">
+</div>

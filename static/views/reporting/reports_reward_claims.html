@@ -1,0 +1,38 @@
+<div>
+    <div class="row">
+        <div>
+            <table ng-table="reports.claimTableParams" class="table" show-filter="false">
+                <tbody ng-repeat="goalReward in $data">
+                    <tr ng-if="goalReward.progress == 100 && goalReward.reward">
+                        <td title="'Type'" sortable="'goal.goalTypeID'" class="reward-column">
+                            <span ng-bind="main.allGoalTypes[goalReward.goal.goalTypeID].name"></span>
+                        </td>
+                        <td title="'Goal'" class="reward-column">
+                            <span ng-bind="goalReward.goal.goalText"></span>
+                        </td>
+                        <td title="'Reward'" class="reward-column">
+                            <span ng-bind="goalReward.reward.rewardText"></span>
+                        </td>
+                        <td title="'Date Earned'" sortable="'progressDate'" class="reward-column">
+                            <span ng-bind="goalReward.progressDateString"></span>
+                        </td>
+                        <td title="'Claim'" sortable="'claimReport'" class="reward-column">
+                            <span ng-if="(goalReward.progress != 100)">
+                                <span>  </span>
+                            </span>
+                            <span ng-if="(goalReward.progress == 100)"
+                                  ng-click="reports.toggleGoalRewardClaimedWithIndex(goalReward.goal, goalReward.reward, goalReward.monthIndex, goalReward)"
+                                  class="clickable-element">
+                                <button ng-if="!goalReward.claimDate"
+                                        class="btn btn-default btn-sm">Claim</button>
+                                <div ng-if="goalReward.claimDate">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </div>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

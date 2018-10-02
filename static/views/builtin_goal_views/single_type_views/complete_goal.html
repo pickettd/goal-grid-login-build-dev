@@ -1,0 +1,18 @@
+<div ng-if="main.isGoalCurrentlyComplete(goal) && main.isGoalActiveInCurrentView(goal)"
+     class="well grid-view-goal-box"
+     ng-class="{'grid-view-daily-goal-box': main.isGoalDaily(goal)}"
+     ng-style="main.getBackgroundColorStyleFromGoal(goal, true)">
+    <div class="goal done">
+        <span class="glyphicon glyphicon-check grid-view-goal-checkbox"
+              ng-click="main.markGoalIncomplete(goal, $event);$event.stopPropagation()"></span>
+        <del ng-bind="goal.goalText"></del>
+        <span ng-if="goal.private"
+              class="glyphicon glyphicon-eye-close"
+              title="Private goal"></span>
+        <div ng-show="main.currentView.showCompletionDates">
+            <span style="font-size: 80%;">
+                <span>Completed <span ng-bind="main.getCurrentProgessDate(goal)"></span></span>
+            </span>
+        </div>
+    </div>
+</div>

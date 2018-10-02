@@ -1,0 +1,168 @@
+<div class="modal-body">
+    <div>
+        <strong>Add</strong> new account:<br><br>
+        <div>
+            <form name="accountForm" class="form" role="form" novalidate ng-submit="accountForm.$valid && addAccount()">
+                <div class="form-inline">
+                    <div class="form-group" ng-class="{'has-error': accountForm.name.$invalid}">
+                        <label for="name" class="control-label">Name</label>
+                        <input type="text" class="form-control" size="20" ng-model="newAccount.username" name="name" placeholder="Required" required>
+                    </div>
+                    <div class="form-group" ng-class="{'has-error': accountForm.password.$invalid}">
+                        <label for="password" class="control-label">Password</label>
+                        <input type="text" class="form-control" size="20" ng-model="newAccount.pw" name="password" placeholder="Required (>6 characters)" required minlength=6>
+                    </div>
+                </div>
+                <div class="form-inline" style="padding-top:5px;">
+                    <div class="form-group" ng-class="{'has-error': accountForm.email.$invalid}">
+                        <label for="email" class="control-label">Email</label>
+                        <input type="email" class="form-control" size="43" ng-model="newAccount.email" name="email" placeholder="Required" required>
+                    </div>
+                    <div class="form-group" ng-class="{'has-error': accountForm.role.$invalid}">
+                        <label for="role" class="control-label">Role</label>
+                        <div class="input-group">
+                            <select ng-model="newAccount.role" name="role" ng-options="role as role.name for (id, role) in main.account_roles" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <div class="form-group"
+                         ng-class="{'has-error': accountForm.memberOf.$invalid}">
+                        <label for="memberOf" class="control-label">Member of</label>
+                        <div ng-dropdown-multiselect="" options="main.allGroups"
+                             selected-model="newAccount.selectedMemberOfArray"
+                             extra-settings="accountsModal.groupDropdownSettings"
+                             translation-texts="accountsModal.groupDropdownTexts">
+                        </div>
+                    </div>
+                    <div ng-if="newAccount.role.name === 'manager'"
+                         class="form-group"
+                         ng-class="{'has-error': accountForm.managerOf.$invalid}">
+                        <label for="managerOf" class="control-label">Manager of</label>
+                        <div ng-dropdown-multiselect="" options="main.allGroups"
+                             selected-model="newAccount.selectedManagerOfArray"
+                             extra-settings="accountsModal.groupDropdownSettings"
+                             translation-texts="accountsModal.groupDropdownTexts">
+                        </div>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <input id="saveNewAccountButton" type="submit" value="Save" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <div>
+        <strong>Edit</strong> existing accounts:<br>
+        <div ng-repeat="newAccount in accountsModal.newAccountsLoading track by newAccount.username">
+            <i class="fa fa-spinner fa-spin"></i>
+            <span>Processing <span ng-bind="newAccount.username"></span> account</span>
+            <hr>
+        </div>
+        <div ng-repeat="account in main.accounts | orderObjectBy:'username' track by account.id">
+            <!-- The ng-hide directive will hide these elements when this account is being edited -->
+            <div ng-hide="currentEdit[account.id].account">
+                <h3>{{account.username}}</h3>
+                <span>Email: <span ng-bind="account.email"></span></span>
+                <br>
+                <span>Role: <span ng-bind="account.role.name"></span></span>
+                <br>
+                <span>
+                    Member Of:
+                    <span ng-repeat="(groupID, value) in account.groups.memberOf">
+                        <span ng-bind="main.allGroups[groupID].name"></span><span ng-if="!($last)">, </span>
+                    </span>
+                </span>
+                <br ng-if="account.role.name !== 'user'">
+                <span ng-if="account.role.name !== 'user'">
+                    Manager Of:
+                    <span ng-if="account.role.name === 'manager'"
+                          ng-repeat="(groupID, value) in account.groups.managerOf">
+                        <span ng-bind="main.allGroups[groupID].name"></span><span ng-if="!($last)">, </span>
+                    </span>
+                    <span ng-if="account.role.name === 'admin'">
+                        All Groups
+                    </span>
+                </span>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-primary" ng-click="editAccount(account)">Edit</button>
+                </div>
+            </div>
+            <!-- The ng-show directive will show these elements when this account is being edited -->
+            <div ng-show="currentEdit[account.id].account">
+                <span ng-hide="currentEdit[account.id].deleteMode">
+                    <button type="button" class="btn-danger glyphicon glyphicon-trash" ng-click="toggleDeleteAccountMode(account.id)"></button>
+                    <strong>Edit</strong> '{{account.username}}' account:
+                    <br>
+                    <span style="color: red" ng-show="currentEdit[account.id].stopDelete">
+                        This account cannot be deleted because you are currently logged into this account.
+                    </span>
+                </span>
+                <span ng-show="currentEdit[account.id].deleteMode">
+                    <span style="color: red">This account will be permanently deleted.
+                        Are you sure you want to delete '{{account.username}}' account?</span>
+                    <button type="button" class="btn-danger" ng-click="deleteAccount(account.id)">Yes</button>
+                    <button type="button" class="btn-default" ng-click="toggleDeleteAccountMode(account.id)">No</button>
+                </span>
+                <br><br>
+                <form name="accountEditForm" class="form-inline" role="form" novalidate ng-submit="accountEditForm.$valid && saveAccount(account)">
+                    <fieldset ng-disabled="currentEdit[account.id].deleteMode">
+                        <div class="form-group" ng-class="{'has-error': accountEditForm.name.$invalid}">
+                            <label for="name" class="control-label">Name</label>
+                            <input type="text" class="form-control" size="20" ng-model="currentEdit[account.id].account.username" name="name" placeholder="Required" required>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': accountEditForm.password.$invalid}">
+                            <label for="password" class="control-label">Password</label>
+                            <input type="text" class="form-control" size="20" ng-model="currentEdit[account.id].account.pw" name="password" placeholder="<unchanged>">
+                        </div>
+                        <br>
+                        <div class="form-group" ng-class="{'has-error': accountEditForm.email.$invalid}">
+                            <label for="email" class="control-label">Email</label>
+                            <input type="email"
+                                   class="form-control"
+                                   size="20"
+                                   ng-model="currentEdit[account.id].account.email"
+                                   name="email"
+                                   placeholder="Required"
+                                   required>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': accountEditForm.role.$invalid}">
+                            <label for="role" class="control-label">Role</label>
+                            <div class="input-group">
+                                <select ng-model="currentEdit[account.id].account.role" name="role" ng-options="role as role.name for (id, role) in main.account_roles" required />
+                            </div>
+                        </div>
+                        <br>
+                        <div ng-if="currentEdit[account.id].account.selectedMemberOfArray"
+                             class="form-group"
+                             ng-class="{'has-error': accountForm.memberOf.$invalid}">
+                            <label for="memberOf" class="control-label">Member of</label>
+                            <div ng-dropdown-multiselect="" options="main.allGroups"
+                                 selected-model="currentEdit[account.id].account.selectedMemberOfArray"
+                                 extra-settings="accountsModal.groupDropdownSettings"
+                                 translation-texts="accountsModal.dropdownTexts">
+                            </div>
+                        </div>
+                        <div ng-if="currentEdit[account.id].account.role.name === 'manager'"
+                             class="form-group"
+                             ng-class="{'has-error': accountForm.managerOf.$invalid}">
+                            <label for="managerOf" class="control-label">Manager of</label>
+                            <div ng-dropdown-multiselect="" options="main.allGroups"
+                                 selected-model="currentEdit[account.id].account.selectedManagerOfArray"
+                                 extra-settings="accountsModal.groupDropdownSettings"
+                                 translation-texts="accountsModal.dropdownTexts">
+                            </div>
+                        </div>
+                        <div class="pull-right">
+                            <input type="submit" value="Save" class="btn btn-success" />
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <hr ng-if="!($last)">
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+</div>

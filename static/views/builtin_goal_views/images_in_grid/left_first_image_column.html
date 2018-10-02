@@ -1,0 +1,20 @@
+<div class="sortable-container" sv-part="main.currentView.pictureIDs.left.first">
+    <div ng-if="main.gridViewRearrangeGoals"
+         ng-repeat="pictureID in main.currentView.pictureIDs.left.first track by $index"
+         sv-element
+         class="multi draggable-element">
+        <div ng-include="'static/views/builtin_goal_views/images_in_grid/just_image.html'"></div>
+    </div>
+    <div ng-if="!main.gridViewRearrangeGoals"
+         ng-repeat="pictureID in main.currentView.pictureIDs.left.first track by $index"
+         class="multi">
+        <a ng-click="main.setPictureAndOpenModal(pictureID, true, true, $index)" href>
+            <div ng-include="'static/views/builtin_goal_views/images_in_grid/just_image.html'"></div>
+        </a>
+    </div>
+    <button style="width: 100%; display: block; margin: auto;"
+            class="packery-image"
+            ng-click="main.setPictureAndOpenModal(null, true, true, -1)">
+        Add Here
+    </button>
+</div>

@@ -1,0 +1,100 @@
+<link ng-if="main.css" rel="stylesheet" ng-href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/{{ main.css }}/bootstrap.min.css">
+
+<link ng-if="main.css" rel="stylesheet" href="static/bower_components/bootstrap-additions/dist/bootstrap-additions.min.css">
+
+<link ng-if="main.css" rel="stylesheet" href="static/styles/main.css">
+
+<nav class="navbar navbar-default" role="navigation" style="margin: 0;">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#goal-grid-demo-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" id="manageUserSettingsButton" href="" data-toggle="modal" data-target="#manageUserSettings">
+                <span><span ng-bind="main.currentUser.name"></span>'s</span>
+                <span> Goal Grid</span>
+            </a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="goal-grid-demo-navbar-collapse-1">
+            <ul ng-if="!main.currentUser.isAdmin()"
+                class="nav navbar-nav">
+                <li ng-if="!main.showReports" ng-repeat="view in main.allViews"
+                    ng-class="{active: ((view.id === main.currentView.id) && !main.showRewards)}">
+                    <a href="" ng-click="main.enableView(view.id)"><span ng-bind="view.name"></span></a>
+                </li>
+                <li ng-if="main.showReports">
+                    <a id="viewGridButton" href="" ng-click="main.showReports = false" style="font-weight: bold;">Return to My Goals</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li ng-if="!main.currentUser.isAdmin() && main.isInitialLoadDone"
+                    ng-class="{active: (main.showRewards)}">
+                    <a href="" ng-click="main.showRewards = !main.showRewards; main.showReports = false">Rewards</a>
+                </li>
+                <li ng-if="!main.currentUser.isAdmin() && main.isInitialLoadDone"
+                    ng-class="{active: main.showReports}">
+                    <a id="viewReportsButton" href="" ng-click="main.showReports = !main.showReports; main.showRewards = false">Reports</a>
+                </li>
+                <li ng-if="main.isInitialLoadDone && main.currentUser.isAdmin()">
+                    <a id="manageAccountsButton" href="" data-toggle="modal" data-target="#manageAccounts">Accounts</a>
+                </li>
+                <li ng-if="!main.currentUser.isAdmin()">
+                    <a href="" ng-click="main.openHelpModal()">Help</a>
+                </li>
+                <li><a href="" ng-click="main.logOut()">Logout</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<nav ng-if="!main.currentUser.isAdmin() && main.showReports && !main.showReportsCoaching"
+     class="navbar navbar-default"
+     role="navigation"
+     style="">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav navbar-right">
+            <li ng-repeat="goalType in main.allGoalTypes"
+            ng-class="{active: (main.currentReportsTypeIDArray.indexOf(goalType.id) > -1)}">
+                <a href="" ng-click="main.toggleGoalType(goalType.id)">
+                    <span ng-bind="goalType.name"></span>
+                </a>
+            </li>
+            <li ng-class="{active: main.showReportsNoteSection}">
+                <a href="" ng-click="main.showReportsNoteSection = !main.showReportsNoteSection">Notes</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div ng-class="{'container-fluid': main.currentView.useFluidContainerStyle && !main.showReports, 'container': !main.currentView.useFluidContainerStyle || main.showReports}">
+    <div ng-hide="main.currentUser.isAdmin()"
+         class="pull-right hide-on-print clickable-element unread-notes" ng-click="main.openUnreadNotes()" style="color: blue;">
+        <button ng-hide="!main.getObjectLength(main.unreadManagerNoteIDs)" class="btn-sm btn-primary">
+            Unread Manager Notes: <span style="font-weight: bold;" ng-bind="main.getObjectLength(main.unreadManagerNoteIDs)" class="badge"></button>
+        </span><br>
+        <span ng-if="main.unclaimedRewardIDs.length">
+            Unclaimed Rewards: <span style="font-weight: bold;" ng-bind="main.unclaimedRewardIDs.length"></span>
+        </span>
+    </div>
+    <div ng-if="!main.currentUser.isAdmin() && main.isInitialLoadDone">
+        <div ng-if="main.currentView && !main.showReports && !main.showRewards"
+             ng-include="'static/views/builtin_goal_views/goal_layout_generic.html'"></div>
+
+        <div ng-if="main.showReports || main.showRewards"
+             ng-include="'static/views/reporting/report_layout.html'"></div>
+    </div>
+    <div ng-if="!main.isInitialLoadDone"
+         style="padding-top: 17px;">
+        <div ng-include="'static/views/loading.html'"></div>
+    </div>
+</div>
+
+<!-- Manage Accounts Modal -->
+<div ng-include="'static/views/modals/accounts_groups/accounts.html'"></div>
+
+<!-- Manage User Settings Modal -->
+<div ng-include="'static/views/modals/user_settings.html'"></div>

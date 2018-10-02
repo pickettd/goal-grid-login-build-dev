@@ -1,0 +1,55 @@
+<div style="padding-top: 17px">
+    <div ng-if="!main.currentView.hideDateControls"
+         class="row">
+        <div class="col-xs-12 text-center">
+            <div class="input-group"
+               style="margin: auto; width: 303px;">
+                <span ng-if="main.currentView.changeDate"
+                      class="input-group-btn">
+                    <button type="button"
+                            class="btn btn-default"
+                            ng-click="main.incrementCurrentViewDateByViewAmount(-1)">
+                        <i class="glyphicon glyphicon-chevron-left"></i>
+                    </button>
+                </span>
+                <input type="text"
+                       class="form-control text-center grid-date-display"
+                       ng-class="{'grid-date-box-readonly': !main.currentView.changeDate}"
+                       ng-disabled="!main.currentView.changeDate"
+                       ng-click="main.openGridDatePicker($event)"
+                       datepicker-popup="{{main.currentDatePickerPopup}}"
+                       is-open="main.gridDatePickerOpened"
+                       ng-model="main.currentViewDate"
+                       datepicker-options="main.dateOptions"
+                       show-button-bar="false"
+                       datepicker-mode="main.currentDatePickerMode"  />
+                <span ng-if="(main.currentView.changeDate)&&(!false)" class="input-group-btn">
+                    <button type="button"
+                            class="btn btn-default"
+                            ng-click="main.incrementCurrentViewDateByViewAmount(1)">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div ng-if="!main.currentView.hideGridControls"
+         class="row">
+        <div class="col-xs-12 text-center">
+            <div style="margin: auto;">
+                <!-- <span ng-if="main.currentView.showColorByGroup" class="no-wrap-space">
+                    <label>Color Goals By Group:</label>
+                    <input type="checkbox"
+                           ng-model="main.linkSettings.colorCodeByLinkPath"
+                           ng-click="main.toggleChartViewColorByLinkPath()">
+                </span> -->
+                <span class="no-wrap-space">
+                    <label>Drag and Drop Goals:</label>
+                    <input type="checkbox"
+                           ng-model="main.gridViewRearrangeGoals">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div ng-include="main.currentView.templateURL"></div>
+</div>

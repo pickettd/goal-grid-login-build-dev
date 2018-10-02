@@ -1,0 +1,50 @@
+<!-- No more linking
+<div>
+    <form class="form-inline" role="form" novalidate>
+        <div ng-if="goalModal.modalState.linkColorMode"
+             class="form-group">
+            <h4 ng-bind="currentEdit[goal.id].goal.goalText"></h4>
+        </div>
+        <div ng-class="{'pull-right': goalModal.modalState.linkColorMode}">
+            <label ng-if="!goalModal.modalState.linkColorMode"
+                   class="control-label">
+                Group:
+            </label>
+            <input type="color"
+                   spectrum-colorpicker
+                   ng-model="currentEdit[goal.id].goal.linkColor"
+                   options="goalModal.colorPaletteOptions"
+                   palette="goalModal.linkColorChoices" />
+            <input disabled
+                   class="form-control"
+                   type="text"
+                   size="12"
+                   ng-model="currentEdit[goal.id].goal.linkColor" />
+        </div>
+    </form>
+</div>
+<div>
+    <div ng-if="goalModal.modalState.linkColorMode">
+        <br>
+        <hr>
+    </div>
+    <div>
+        <span ng-if="currentEdit[goal.id].goal.linkColor">
+            <span>Other goals in</span>
+            <span>
+                <span> '<span ng-bind="currentEdit[goal.id].goal.linkColor"></span>'</span>
+            </span>
+            <span> link group:</span>
+        </span>
+        <span ng-if="!currentEdit[goal.id].goal.linkColor">
+            No link group
+        </span>
+        <ul>
+            <li ng-repeat="linkedGoal in goalModal.getLinkedGoals(currentEdit[goal.id].goal) track by linkedGoal.id">
+                <h4>
+                    <span ng-bind="linkedGoal.goalText"></span>
+                </h4>
+            </li>
+        </ul>
+    </div>
+</div>-->

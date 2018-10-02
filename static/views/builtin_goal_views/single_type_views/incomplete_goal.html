@@ -1,0 +1,41 @@
+<div ng-if="!(main.isGoalCurrentlyComplete(goal)) && main.isGoalActiveInCurrentView(goal)"
+     class="well grid-view-goal-box"
+     ng-class="{'grid-view-daily-goal-box': main.isGoalDaily(goal)}"
+     style="padding: 0;">
+    <div class="goal not-done"
+         style="padding: 5px;"
+         ng-style="main.getBackgroundColorStyleFromGoal(goal, false)">
+        <span ng-if="(!(main.currentView.editPercentages && main.allGoalTypes[goalTypeID].displayPercentage)) || goal.checkboxCompletion"
+              class="glyphicon glyphicon-unchecked grid-view-goal-checkbox"
+              ng-click="main.markGoalProgress(goal, '100', $event);$event.stopPropagation()"></span>
+        <span ng-bind="goal.goalText" ng-class="{'goal-text-bold': main.currentView.boldGoalText}"></span>
+        <span ng-if="goal.private" class="glyphicon glyphicon-eye-close" title="Private goal"></span>
+        <span ng-if="main.allGoalTypes[goalTypeID].displayPercentage && !(main.allGoalTypes[goalTypeID].displayPercentage)">
+            <span style="font-size: 70%; font-weight: bold;">
+                <span><span ng-bind="main.getCurrentCompletionPercentageForGoal(goal)"></span>% complete</span>
+            </span>
+        </span>
+        <div ng-if="(main.currentView.editPercentages)&&(main.allGoalTypes[goalTypeID].displayPercentage) && !goal.checkboxCompletion">
+            <br>
+            <div ng-if="main.currentView.editPercentageButtons" class="btn-group">
+                <button ng-repeat="percentage in main.currentView.editPercentageButtons"
+                        class="btn btn-default btn-xs"
+                        ng-class="{active: (main.getCurrentCompletionPercentageForGoal(goal) === percentage)}"
+                        type="button"
+                        ng-click="main.markGoalProgress(goal, percentage, $event);$event.stopPropagation()"
+                        ng-attr-style="{{main.colorPercentageSquare($index, goal, 0)}}">
+                    <span><span ng-bind="percentage"></span>%</span>
+                </button>
+                <!-- Adam wanted to try the idea of a slider
+                <input type="range"
+                       min="0"
+                       max="100"
+                       step="10"
+                       ng-click="$event.stopPropagation()"
+                       value="{{main.getCurrentCompletionPercentageForGoal(goal)}}" />
+                <span>{{main.getCurrentCompletionPercentageForGoal(goal)}}%</span>
+                -->
+            </div>
+        </div>
+    </div>
+</div>

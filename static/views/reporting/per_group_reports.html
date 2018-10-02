@@ -1,0 +1,170 @@
+<div>
+    <div ng-if="reports.showGroup[group.id]">
+        <h2 ng-if="main.currentUser.isManager()"
+            ng-click="reports.showGroup[group.id] = false"
+            class="clickable-element">
+            <span class="dropup"><span class="caret"></span></span>
+            <span ng-bind="group.name"></span>
+        </h2>
+        <div ng-repeat="user in reports.getUsersFromGroup(group.id, false, true) | orderObjectBy:'username'"
+             ng-init="(_monthPercentArray = []).length = 11;">
+            <div ng-if="reports.isUserInUserArray(user)"
+                 ng-class="{'well report-well': main.currentUser.isManager()}">
+                <div ng-if="reports.showUser[user.id]">
+                    <h3 ng-if="main.currentUser.isManager()"
+                        ng-click="reports.showUser[user.id] = false"
+                        class="clickable-element">
+                        <span class="dropup"><span class="caret"></span></span>
+                        <span ng-bind="user.username"></span>
+                    </h3>
+                    <div ng-repeat="goalTypeID in reports.currentReportsTypeIDArray">
+                        <!-- This table is for daily-type goals -->
+                        <table class="report-table" ng-if="!main.allGoalTypes[goalTypeID].displayPercentage">
+                            <th ng-repeat="day in _monthDayArray track by $index"
+                                ng-class=reports.shouldHighLightDate($index)>
+                                <span ng-if="$first" style="font-weight: bold;">
+                                    <span ng-bind="main.allGoalTypes[goalTypeID].name"></span>
+                                </span>
+                                <span ng-if="!$first && !$last" ng-bind="$index"></span>
+                                <span ng-if="$last">Total</span>
+                            </th>
+                            <tbody ng-repeat="goal in reports.getCurrentReportGoals(goalTypeID, user.id) track by goal.id">
+                                <tr ng-repeat="monthIndex in reports.getRecurrenceArrayForGoalBasedOnCurrentDateRange(goal)">
+                                    <td ng-repeat="day in _monthDayArray track by $index"
+                                        ng-attr-style="{{reports.colorDailySquare($index, goal, monthIndex, $last)}}"
+                                        >
+                                        <span ng-if="$first">
+                                            <span ng-if="reports.reportMonthCounterArray.length > 1">
+                                                <span><span ng-bind="reports.getMonthStringUsingCurrentToAndDiff(monthIndex)"></span>: </span>
+                                            </span>
+                                            <span ng-bind="goal.goalText"></span>
+                                        </span>
+                                        <span ng-if="!$first && !$last"></span>
+                                        <span ng-if="$last">
+                                            <span ng-bind="reports.getGoalCompletionNumberForCurrentReportMonthsWithIndex(goal, monthIndex)"></span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- This table is for percentage-based (non-daily) goals -->
+                        <table class="report-table" ng-if="main.allGoalTypes[goalTypeID].displayPercentage">
+                            <th ng-repeat="percent in _monthPercentArray track by $index"
+                                ng-class="{percentage: !$first}">
+                                <span ng-if="$first" style="font-weight: bold;">
+                                    <span ng-bind="main.allGoalTypes[goalTypeID].name"></span>
+                                </span>
+                                <span ng-if="!$first">
+                                    <span ng-bind="$index"></span><span>0%</span>
+                                </span>
+                            </th>
+                            <tbody ng-repeat="goal in reports.getCurrentReportGoals(goalTypeID, user.id) track by goal.id">
+                                <tr ng-repeat="monthIndex in reports.getRecurrenceArrayForGoalBasedOnCurrentDateRange(goal)">
+                                    <td ng-repeat="percent in _monthPercentArray track by $index"
+                                        ng-attr-style="{{reports.colorPercentageSquare($index, goal, monthIndex)}}">
+                                        <span ng-if="$first">
+                                            <span ng-if="reports.reportMonthCounterArray.length > 1">
+                                                <span ng-if="!(main.isGoalLifeTime(goal))">
+                                                    <span ng-bind="reports.getDateStringWithGoalAndIndex(goal, monthIndex)"></span><span>: </span>
+                                                </span>
+                                            </span>
+                                            <span ng-bind="goal.goalText" style="width:30%"></span>
+                                        </span>
+                                        <span ng-if="!$first">
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                    </div>
+                    <!-- Notes go here -->
+                    <div ng-if="main.showReportsNoteSection">
+                        <table class="report-table">
+                            <th ng-if="!main.currentUser.isManager()">
+                            <span>Mark as Read</span>
+                            </th>
+                            <th>
+                                <span style="font-weight: bold;">User</span>
+                            </th>
+                            <th>
+                                <span style="font-weight: bold;">Date</span>
+                            </th>
+                            <th>
+                                <span style="font-weight: bold;">Time</span>
+                            </th>
+                            <th>
+                                <span style="font-weight: bold;">Shared</span>
+                            </th>
+                            <th>
+                                <span style="font-weight: bold;">Note</span>
+                            </th>
+                            <tbody ng-repeat="monthIndex in reports.reportMonthCounterArray">
+                                <tr ng-repeat="note in reports.getCurrentReportNotesForUserByMonthIndex(user.id, monthIndex) track by note.id"
+                                    ng-click="main.addOrEditNoteModal(user.id, note.id)"
+                                    ng-class="{'clickable-element': reports.isThisNoteEditableByLoggedInUser(note)}" >
+                                    <td ng-if="!main.currentUser.isManager()"
+                                        style="padding: 0;">
+                                        <input ng-if="note.managerID"
+                                               type="checkbox"
+                                               ng-checked="!reports.isNoteUnread(note.id)"
+                                               ng-click="reports.toggleNoteReadStatus(note.id)">
+                                    </td>
+                                    <td>
+                                        <span ng-if="!note.managerID"
+                                              ng-bind="user.username"></span>
+                                        <span ng-if="note.managerID">
+                                            <span ng-if="main.accounts[note.managerID].username"
+                                                  ng-bind="main.accounts[note.managerID].username"></span>
+                                            <span ng-if="!main.accounts[note.managerID].username && note.managerName"
+                                                  ng-bind="note.managerName"></span>
+                                            <span ng-if="!main.accounts[note.managerID].username && !note.managerName">
+                                                Manager
+                                            </span>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>{{note.timestamp | date: 'MM/dd/yyyy'}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{note.timestamp | date: 'hh:mm a'}}</span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="!note.private">Shared note</span>
+                                        <span ng-if="!note.managerID && note.private">Private</span>
+                                        <span ng-if="note.managerID && note.private">Manager-only</span>
+                                    </td>
+                                    <td class="notetext">
+                                        <span ng-bind="note.noteText"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button ng-if="main.currentUser.isManager()"
+                                ng-click="main.addOrEditNoteModal(user.id)"
+                                class="hide-on-print">
+                            <span>Add note</span>
+                        </button>
+                        <br>
+                    </div>
+                </div>
+                <div ng-if="!reports.showUser[user.id]">
+                    <h3 ng-if="main.currentUser.isManager()"
+                        ng-click="reports.showUser[user.id] = true"
+                        class="clickable-element">
+                        <span class="caret"></span>
+                        <span ng-bind="user.username"></span>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="!reports.showGroup[group.id]">
+        <h2 ng-if="main.currentUser.isManager()"
+            ng-click="reports.showGroup[group.id] = true"
+            class="clickable-element">
+            <span class="caret"></span>
+            <span ng-bind="group.name"></span>
+        </h2>
+    </div>
+</div>

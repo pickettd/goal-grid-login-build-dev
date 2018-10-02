@@ -1,0 +1,54 @@
+<p ng-if="noteModal.modalState.managerID">
+    <span>Note for <span ng-bind="noteModal.modalState.user.name"></span>:
+</p>
+<div>
+    <form name="noteForm"
+          class="form"
+          role="form"
+          novalidate
+          ng-submit="noteForm.$valid && noteModal.addNote()">
+        <div class="form-group" ng-class="{'has-error': noteForm.noteText.$invalid}">
+            <textarea
+                   rows="4"
+                   class="form-control"
+                   size="50"
+                   name="noteText"
+                   placeholder="Note Text"
+                   required
+                   autofocus
+                   ng-model="noteModal.newNote.noteText"></textarea>
+        </div>
+        <div class="form-group" style="margin:0;">
+            <label style="margin-bottom:0;">Who can see this note?</label>
+            <div class="form-inline">
+                <div class="radio" style="margin:0;">
+                    <label>
+                        <input type="radio"
+                               ng-model="noteModal.newNote.private"
+                               ng-value="false" />
+                        <span>
+                            Shared with
+                            <span ng-bind="noteModal.returnSharedWithString(noteModal.newNote)"></span>
+                        </span>
+                    </label>
+                </div>
+                <div class="radio" style="margin:0;">
+                    <label>
+                        <input type="radio"
+                               ng-model="noteModal.newNote.private"
+                               ng-value="true" />
+                        <span>
+                            Just me (not shared with
+                            <span ng-bind="noteModal.returnSharedWithString(noteModal.newNote)"></span><span>)</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" style="min-height:20px;">
+            <div class="pull-right">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </div>
+    </form>
+</div>

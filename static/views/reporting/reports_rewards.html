@@ -1,0 +1,89 @@
+<div>
+    <div class="row">
+        <div>
+            <table ng-table="reports.rewardTableParams" class="table" show-filter="false">
+                <tr ng-repeat="goal in $data">
+                    <td title="'Type'" sortable="'goalTypeID'" class="reward-column">
+                        <span ng-bind="main.allGoalTypes[goal.goalTypeID].name"></span>
+                    </td>
+                    <td title="'Goal'" class="reward-column">
+                        <span ng-bind="goal.goalText"></span>
+                    </td>
+                    <td title="'Progress'" sortable="'progress'" class="reward-column">
+                        <div class="progress" style="margin: 0;">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="100"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 ng-style="reports.getRewardsGoalProgressStyles(goal)">
+                                <span style="color: #000">
+                                    <span ng-bind="reports.getPercentageCompleteForCurrentReportWithIndex(goal, 0)"></span>%
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                    <td title="'Reward'" sortable="'rewards'" class="reward-column">
+                        <div ng-if="(!reports.getRewardsForGoalOnCurrentReportWithIndex(goal, 0)) || (main.getObjectLength(reports.getRewardsForGoalOnCurrentReportWithIndex(goal, 0)) === 0)"
+                             class="row"
+                             style="padding-bottom: 5px;">
+                            <div class="form-inline">
+                                <div class="col-xs-9" style="padding-right: 0;">
+                                    <input type="text" class="editable-input form-control input-sm" disabled />
+                                </div>
+                                <div class="col-xs-3" style="min-width: 60px; padding: 0;">
+                                    <span class="clickable-element"
+                                          ng-click="reports.addAdditionalRewardRow(goal)">
+                                        <span class=" glyphicon glyphicon-plus"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-repeat="reward in reports.getRewardsForGoalOnCurrentReportWithIndex(goal, 0)" style="padding-bottom: 5px;">
+                            <div class="form-inline">
+                                <div class="col-xs-9" style="padding-right: 0;">
+                                    <input type="text"
+                                           name="rewardText"
+                                           class="editable-input form-control input-sm"
+                                           ng-model="reward.rewardText"
+                                           ng-change="reports.rewardTextChanged(goal, reward, monthIndex)"
+                                           ng-disabled="reward.managerID !== undefined" />
+                                </div>
+                                <div class="col-xs-3" style="min-width: 60px; padding: 0;">
+                                    <span ng-if="!$last && reward.managerID !== undefined">N/A</span>
+                                    <span ng-if="$last"
+                                          class="clickable-element"
+                                          ng-click="reports.addAdditionalRewardRow(goal)">
+                                        <span>
+                                            <span class=" glyphicon glyphicon-plus"></span><span ng-if="reward.managerID === undefined"> | </span>
+                                        </span>
+                                    </span>
+                                    <span ng-if="(main.getObjectLength(reports.getRewardsForGoalOnCurrentReportWithIndex(goal, 0)) > 0) && (reward.managerID === undefined)"
+                                          class="clickable-element glyphicon glyphicon-remove"
+                                          style="color: red;"
+                                          ng-click="reports.openRemoveRewardModal(goal, reward, $index)"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td title="'Claim'" sortable="'claimMain'" class="reward-column">
+                        <div class="row" ng-repeat="reward in reports.getRewardsForGoalOnCurrentReportWithIndex(goal, 0)"
+                             style="padding-bottom: 5px;">
+                            <div class="col-xs-12">
+                                <span ng-if="(reports.getPercentageCompleteForCurrentReportWithIndex(goal, 0) != 100)">
+                                    <span>  </span>
+                                </span>
+                                <span ng-if="(reports.getPercentageCompleteForCurrentReportWithIndex(goal, monthIndex) == 100)"
+                                      ng-click="reports.toggleGoalRewardClaimedWithIndex(goal, reward, monthIndex)"
+                                      class="clickable-element">
+                                    <button ng-if="!reports.getGoalRewardClaimedDateWithIndex(goal, reward, monthIndex)"
+                                            class="btn btn-default btn-sm">Claim</button>
+                                    <div ng-if="reports.getGoalRewardClaimedDateWithIndex(goal, reward, monthIndex)">
+                                        <span class="glyphicon glyphicon-ok" style="padding-top: 5px; padding-bottom: 10px;"></span>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

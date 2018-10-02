@@ -1,0 +1,252 @@
+/* Adjust container size to fit Adam's request for rectangular goal boxes */
+
+@media (max-width: 760px) {
+    .unread-notes {
+       margin:10px 0 15px 0;
+    }
+}
+@media (min-width: 1400px) {
+    .container{
+        width: 1370px;
+    }
+}
+@media (min-width: 1600px) {
+    .container{
+        width: 1570px;
+    }
+}
+
+@media print {
+    .hide-on-print {
+        display: none;
+    }
+    body {
+        -webkit-print-color-adjust: exact;
+    }
+}
+    .unread-notes {
+       margin:10px 0 15px 0;
+    }
+.cropArea {
+    background: #E4E4E4;
+    overflow: hidden;
+    width:500px;
+    height:350px;
+}
+
+body {
+    overflow-y: scroll;
+}
+
+.grid-view-note-box {
+    background-color: #fff;
+}
+
+.no-wrap-space {
+    white-space: nowrap;
+}
+
+.reward-column {
+    vertical-align: middle !important;
+}
+
+.grid-date-box {
+    min-width: 225px;
+    max-width: 303px;
+}
+
+.grid-date-box-readonly {
+    border-bottom-right-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+}
+
+.sv-helper .grid-view-goal-box {
+   -webkit-box-shadow: 0px 0px 10px 1px #9E9E9E;
+   -moz-box-shadow: 0px 0px 10px 1px #9E9E9E;
+   box-shadow: 0px 0px 10px 1px #9E9E9E;
+}
+
+.grid-view-goal-box {
+    margin: 5px;
+    margin-left: 0px;
+    padding: 5px;
+    text-align: center;
+    border: 3px solid #000000;
+}
+
+.grid-view-daily-goal-box {
+    text-align: left;
+}
+
+.grid-view-goal-checkbox {
+    color: blue;
+    font-size: 200%;
+}
+
+.grid-view-type-header {
+    color: #428bca;
+}
+
+.draggable-element {
+    cursor: pointer;
+    cursor: hand;
+    cursor: grab;
+    cursor: -webkit-grab;
+    cursor:-moz-grab;
+}
+
+.clickable-element {
+    cursor: pointer;
+}
+.report-table .clickable-element {
+    background-color:#eff6ff;
+}
+.report-table .clickable-element:hover {
+    background-color:#e6f2ff;
+}
+.report-table .clickable-element td.notetext:hover {
+    
+}
+.report-table:hover {
+    cursor:default;
+}
+.sortable-single-goal {
+    position: relative;
+    min-height: 150px;
+}
+
+.sortable-single-goal-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.sortable-single-goal-completed {
+    font-weight: bold;
+    position: absolute;
+    top: 90%;
+    left: 72%;
+    transform: translate(-10%, -28%);
+}
+
+@media (min-width: 1400px) {
+    .sortable-single-goal {
+        min-height: 100px;
+    }
+    .sortable-single-goal-completed {
+        top: 88%;
+        left: 72%;
+        transform: translate(-12%, -28%);
+    }
+}
+
+ul.goal-view-menu {
+    list-style: none;
+    padding-left: 0px;
+}
+
+li.goal-view-menu-item {
+    display: inline;
+}
+
+.img-responsive {
+    max-height: 200px;
+}
+
+.goal-text-bold {
+    font-weight: bold;
+}
+
+table.report-table {
+    border-collapse: collapse;
+    width: 100%
+}
+
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+}
+
+td {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+th.highlight {
+    background-color: yellow;
+}
+
+th.percentage {
+    width: 4%
+}
+
+/* Styles for color picker */
+.palette-picker-container {
+	width: 50px;
+}
+.palette-picker-initial {
+	background-color: #F8F8F8;
+	border-radius:4px;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border: 1px solid #ccc;
+
+	padding: 5px 5px 5px 5px;
+	background-color:#fff;
+}
+
+.down-arrow {
+	float:right;
+}
+.color-preview {
+	border:1px solid lightgrey;
+	width:20px;
+	height:20px;
+	display: inline-flex;
+	margin-right:0px;
+}
+
+/* Styles for Packery layouts */
+.card-header-bg {
+    color: white;
+    background: rgb(0, 0, 0); /* Fallback for IE */
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    padding-bottom: 4px;
+}
+
+.card-header-text {
+    position: absolute;
+    margin-top: 10px;
+    top: 10px;
+    left: 10px;
+}
+
+.packery-sizer {
+    width: 1px;
+    height: 1px;
+}
+
+.packery-object {
+    max-width: 600px;
+}
+
+.packery-image {
+    border: 4px solid #fff;
+    border-top: 0px;
+    border-left: 0px
+}
+
+/* End of packery */
+
+/* Adding fix for angular modal shifting left side of backdrop */
+.modal-open {
+    padding-right: 17px !important;
+}
+
+.report-well {
+    background-color: white;
+}

@@ -1,0 +1,20 @@
+<button ng-click="main.setPictureAndOpenModal(null, undefined, undefined)">Add new image</button>
+<hr>
+<div ng-if="main.gridViewRearrangeGoals">
+    <packery class="pckry" gutter="0">
+        <packery-object ng-repeat="(pictureID, picture) in main.allPictures track by picture.id">
+            <div style="max-width: 300px;" class="draggable-element">
+                <div ng-include="'static/views/builtin_goal_views/images_in_grid/just_image.html'"></div>
+            </div>
+        </packery-object>
+    </packery>
+</div>
+<div ng-if="!main.gridViewRearrangeGoals">
+    <packery class="pckry" gutter="0" draggable="false">
+        <packery-object ng-repeat="(pictureID, picture) in main.allPictures track by picture.id">
+            <div style="max-width: 300px;">
+                <div ng-include="'static/views/builtin_goal_views/images_in_grid/click_to_edit_image.html'"></div>
+            </div>
+        </packery-object>
+    </packery>
+</div>

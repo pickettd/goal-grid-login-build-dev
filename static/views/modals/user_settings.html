@@ -1,0 +1,23 @@
+<div class="modal fade" id="manageUserSettings" tabindex="-1" role="dialog" aria-labelledby="manageUserSettingsLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <span><h4 class="modal-title" id="manageUserSettingsLabel">Edit User Settings</h4></span>
+            </div>
+            <div class="modal-body">
+                <form style="width: 150px;">
+                        <div class="form-group">
+                            <label>Theme</label>
+                            <select class="form-control" ng-model="main.css"
+                                    ng-options="bootstrap.url as bootstrap.name for bootstrap in main.bootstraps"
+                                    ng-change="main.setCurrentUserBootstrapUrl(main.css)">
+                            </select>
+                        </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>

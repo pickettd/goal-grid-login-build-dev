@@ -1,0 +1,19 @@
+<form name="pictureEditForm"
+          class="form-inline"
+          role="form"
+          novalidate
+          ng-submit="pictureEditForm.$valid && pictureModal.updatePictureSlot()">
+    <div class="form-group" ng-class="{'has-error': pictureEditForm.picURL.$invalid}">
+        <label ng-repeat="(pictureID, picture) in main.allPictures track by picture.id">
+            <input type="radio" ng-model="pictureModal.selectedID" ng-value="picture.id">
+            <img ng-src="{{ picture.src }}"
+                 class="img-responsive vert"
+                 style="max-width: 100px; padding: 5px;">
+        </label>
+    </div>
+    <div class="pull-right">
+        <input type="submit" value="Save" class="btn btn-success" />
+    </div>
+    <br>
+    <span style="color: white;">_</span>
+</form>

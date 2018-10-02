@@ -1,0 +1,65 @@
+<div>
+    <div class="form">
+        <label style="margin-bottom: 0px;">
+            All notes or manager-only?
+        </label>
+        <div class="form-group">
+            <input type="radio" ng-model="reports.coachingReportFilters.private" ng-value="''" ng-click="reports.coachingReportSetAllNotes()">
+            <span style="padding-right: 10px;">
+                Show shared and manager-only notes
+            </span>
+            <input type="radio" ng-model="reports.coachingReportFilters.private" ng-value="true">
+            <span style="padding-right: 10px;">
+                Just show manager-only notes
+            </span>
+        </div>
+        <div ng-if="reports.coachingReportFilters.private === true" style="margin-top: -15px;">
+            <label style="margin-bottom: 0px;">
+                All manager-only notes or just ones created by me?
+            </label>
+            <div class="form-group">
+                <input type="radio" ng-model="reports.coachingReportFilters.managerID" ng-value="''">
+                <span style="padding-right: 10px;">
+                    Show manager-only notes from all managers
+                </span>
+                <input type="radio" ng-model="reports.coachingReportFilters.managerID" ng-value="main.currentUser.id">
+                <span style="padding-right: 10px;">
+                    Just show manager-only notes created by me
+                </span>
+            </div>
+        </div>
+    </div>
+    <div>
+        <table ng-table="reports.coachingTableParams" class="report-table" show-filter="true">
+            <tr ng-repeat="note in $data" ng-if="note.userID">
+                <td title="'Manager'" sortable="'managerID'">
+                    <span ng-if="note.managerID">
+                        <span ng-if="note.managerName"
+                              ng-bind="note.managerName">
+                        </span>
+                        <span ng-if="!note.managerName"
+                              ng-bind="reports.allAccounts[note.managerID].username">
+                        </span>
+                    </span>
+                </td>
+                <td title="'Employee'" sortable="'userID'">
+                    {{reports.allAccounts[note.userID].username}}
+                </td>
+                <td title="'Date'" sortable="'timestamp'">
+                    {{note.timestamp | date:'MM/dd/yyyy h:mm a' }}
+                </td>
+                <td title="'Shared?'">
+                    <span ng-if="note.managerID && note.private">
+                        Manager-only
+                    </span>
+                    <span ng-if="!(note.managerID && note.private)">
+                        Shared
+                    </span>
+                </td>
+                <td title="'Note'">
+                    <span ng-bind="note.noteText"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

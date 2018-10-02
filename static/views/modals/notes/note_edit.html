@@ -1,0 +1,82 @@
+<div ng-repeat="note in noteModal.modalNotes track by note.id">
+    <!-- The ng-hide directive will hide these elements when this note is being edited
+         but it is commented out because we only popup and edit one note at a time -->
+    <!--
+    <div ng-hide="noteModal.currentEdit[note.id].note">
+        <div>
+            <h4>
+                <span ng-bind="note.noteText"></span>
+            </h4>
+            <span ng-if="note.private">Private (not shared with my manager)</span>
+            <span ng-if="!note.private">Note shared with my manager</span>
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary" ng-click="noteModal.editNote(note)">Edit</button>
+            </div>
+        </div>
+    </div>
+    -->
+    <!-- The ng-show directive will show these elements when this note is being edited -->
+    <div ng-if="noteModal.currentEdit[note.id].note">
+        <span ng-hide="noteModal.currentEdit[note.id].deleteMode">
+            <button type="button" class="btn-danger glyphicon glyphicon-trash" ng-click="noteModal.toggleDeleteNoteMode(note.id)"></button>
+            <strong>Delete</strong> this note
+        </span>
+        <span ng-show="noteModal.currentEdit[note.id].deleteMode">
+            <span style="color: red">This note will be permanently deleted.</span><br>
+            <span style="color: red">Are you sure you want to delete this note?</span>
+            <button type="button" class="btn-danger" ng-click="noteModal.deleteNote(note.id)">Yes</button>
+            <button type="button" class="btn-default" ng-click="noteModal.toggleDeleteNoteMode(note.id)">No</button>
+        </span>
+        <br><br>
+        <form name="noteEditForm"
+              class="form"
+              role="form"
+              novalidate
+              ng-submit="noteEditForm.$valid && noteModal.saveNote(note)">
+            <fieldset ng-disabled="noteModal.currentEdit[note.id].deleteMode">
+                <div class="form-group" ng-class="{'has-error': noteEditForm.noteText.$invalid}">
+                    <textarea
+                           rows="4"
+                           class="form-control"
+                           size="50"
+                           name="noteText"
+                           placeholder="Note Text"
+                           required
+                           autofocus
+                           ng-model="noteModal.currentEdit[note.id].note.noteText"></textarea>
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label style="margin-bottom:0;">Who can see this note?</label>
+                    <div class="form-inline">
+                        <div class="radio" style="margin:0;">
+                            <label>
+                                <input type="radio"
+                                       ng-model="noteModal.currentEdit[note.id].note.private"
+                                       ng-value="false" />
+                                <span>
+                                    Shared with
+                                    <span ng-bind="noteModal.returnSharedWithString(noteModal.currentEdit[note.id].note)"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="radio" style="margin:0;">
+                            <label>
+                                <input type="radio"
+                                       ng-model="noteModal.currentEdit[note.id].note.private"
+                                       ng-value="true" />
+                                <span>
+                                    Just me (not shared with
+                                    <span ng-bind="noteModal.returnSharedWithString(noteModal.currentEdit[note.id].note)"></span><span>)</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <input type="submit" value="Save" class="btn btn-success" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <hr ng-if="!($last)">
+</div>
