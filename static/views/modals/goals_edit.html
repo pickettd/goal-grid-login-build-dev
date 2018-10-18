@@ -192,20 +192,20 @@
                             <label>
                                 <!-- If the user is editing a goal that has a recur object, show the repeatType, otherwise show the default -->
                                 <ng-container ng-if="currentEdit[goal.id].goal.recur.repeatType">
-                                    <input type="radio" ng-model="currentEdit[goal.id].goal.recur.repeatType" ng-value="'days'" disabled /> Daily
+                                    <input ng-click="currentEdit[goal.id].goal.recur.selectedDays = []" type="radio" ng-model="currentEdit[goal.id].goal.recur.repeatType" ng-value="'days'" /> Daily
                                 </ng-container>
                                 <ng-container ng-if="!(currentEdit[goal.id].goal.recur.repeatType)">
-                                    <input type="radio" value="true" checked disabled /> Daily
+                                    <input type="radio" value="true" checked /> Daily
                                 </ng-container>
                             </label>
                         </div>
                         <div class="radio">
                             <label>
                                 <ng-container ng-if="currentEdit[goal.id].goal.recur.repeatType">
-                                    <input type="radio" ng-model="currentEdit[goal.id].goal.recur.repeatType" ng-value="'weeks'" disabled /> Weekly
+                                    <input type="radio" ng-model="currentEdit[goal.id].goal.recur.repeatType" ng-value="'weeks'" /> Weekly
                                 </ng-container>
                                 <ng-container ng-if="!(currentEdit[goal.id].goal.recur.repeatType)">
-                                    <input type="radio" value="false" disabled /> Weekly
+                                    <input type="radio" value="false" /> Weekly
                                 </ng-container>
                             </label>
                         </div>
@@ -218,13 +218,13 @@
                         <div ng-if="currentEdit[goal.id].goal.recur.repeatType" style="margin-top:0;">
                             Repeat every
                             <label>
-                                <input type="text" size=1 ng-model="currentEdit[goal.id].goal.recur.frequencyCount" disabled /> {{currentEdit[goal.id].goal.recur.repeatType === 'days' ? 'day' : 'week'}}(s)
+                                <input ng-change="currentEdit[goal.id].goal.recur.frequencyCount != 1 ? currentEdit[goal.id].goal.recur.selectedDays = [] : currentEdit[goal.id].goal.recur.selectedDays" type="number" size=1 ng-model="currentEdit[goal.id].goal.recur.frequencyCount" /> {{currentEdit[goal.id].goal.recur.repeatType === 'days' ? 'day' : 'week'}}(s)
                             </label>
                             <span ng-if="currentEdit[goal.id].goal.recur.repeatType ===  'weeks' && currentEdit[goal.id].goal.recur.selectedDays">on:</span>
                         </div>
-                        <div ng-if="currentEdit[goal.id].goal.recur.repeatType ===  'weeks' && currentEdit[goal.id].goal.recur.selectedDays" class="checkbox">
+                        <div ng-if="currentEdit[goal.id].goal.recur.repeatType ===  'weeks' && currentEdit[goal.id].goal.recur.frequencyCount == 1" class="checkbox">
                             <label ng-repeat="day in days" style="padding-left: 5px">
-                                <input type="checkbox" name="selectedDays[]" value="{{day}}" ng-checked="currentEdit[goal.id].goal.recur.selectedDays.indexOf(day) > -1" ng-click="toggleSelectedDays(day, currentEdit[goal.id].goal.recur.selectedDays)" disabled> {{day}}
+                                <input type="checkbox" name="selectedDays[]" value="{{day}}" ng-checked="currentEdit[goal.id].goal.recur.selectedDays.indexOf(day) > -1" ng-click="toggleSelectedDays(day, currentEdit[goal.id].goal.recur.selectedDays, currentEdit[goal.id].goal.recur)"> {{day}}
                             </label>
                         </div>
                     </div>
