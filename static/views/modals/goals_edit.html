@@ -135,8 +135,7 @@
                     <label style="margin-bottom:0;">
                         Should this {{goalModal.modalGoalType.name == "Activities" ? 'activity' : 'goal'}} show up on the rewards page?
                     </label>
-                    <div ng-if="goalModal.modalGoalType.recurranceFormat !== 'DD-MMM-YYYY'"
-                         class="form-inline">
+                    <div class="form-inline">
                         <div class="radio" style="margin:0;">
                             <label>
                                 <input ng-if="currentEdit[goal.id].goal.hideInRewards === undefined"
